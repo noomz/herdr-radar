@@ -248,6 +248,7 @@ the config file and restarts the daemon.
 | `reorder_workspaces` | `false` | make Herdr's workspace indices follow Radar's activity order |
 | `row_label` | `title` | what names an agent row: `title`, `tab` (the tab's name) or `both`; replaces `show_tab` |
 | `row_format` | unset | a template for the row text, instead of `row_label`: `"[{pane} · ]{title}"` |
+| `spinner_frames` | braille | the spinner in front of a working title: `["◐", "◓", "◑", "◒"]`, or a string read one frame per character; frames must be equally long |
 | `trim_group_prefix` | `true` | drop the workspace name from a title when the header above already shows it |
 | `worktree_mark` | `U+F418` | the mark on a worktree header, needs a Nerd Font; empty for none |
 | `follow_appearance` | `true` | switch Herdr's theme with the desktop's light/dark |

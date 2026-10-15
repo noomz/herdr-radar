@@ -99,3 +99,63 @@ test('the default band keeps the vendor colour and crests away from the panel', 
   assert.ok(Math.max(...dark.map(sum)) > sum('#d97757'), 'lighter crest on dark');
   assert.ok(Math.min(...light.map(sum)) < sum('#d97757'), 'darker crest on light');
 });
+
+test('without spinner colours the spinner stays in the title', () => {
+  const { state, managed } = load('working_animation = "both"\n');
+  const line = state.composeLine(entry, 'working', '', '', 0);
+  assert.equal(line.spinner, '');
+  assert.equal(state.stateTokens('working', line, 'fix').spinner, null);
+  assert.ok(!managed.sidebarBlock('dark').includes('$spinner'));
+});
+
+test('spinner_color moves the spinner into a cell of its own', () => {
+  const { state, managed, config } = load('working_animation = "both"\nspinner_color = "#7aa2f7"\n');
+  const line = state.composeLine(entry, 'working', '', '', 0);
+  assert.equal(line.spinner, config.FRAMES[0]);
+  assert.equal(line.titlePrefix, '');
+  assert.equal(state.stateTokens('working', line, 'fix').spinner, config.FRAMES[0]);
+  const block = managed.sidebarBlock('dark');
+  assert.ok(block.includes('{ token = "$spinner", fg = "#7aa2f7", bold = true, dim = false }'));
+  // Before the title, so it reads first.
+  assert.ok(block.indexOf('"$spinner"') < block.indexOf('"$title_working"'));
+});
+
+test('a row with no logo hangs its indent on the spinner', () => {
+  const { state } = load('spinner_color = "#7aa2f7"\n');
+  const line = state.composeLine({ name: 'no-such-agent' }, 'working', '', '  ', 0);
+  if (line.logo) return; // the vendor has a mark after all; nothing to check
+  assert.ok(line.spinner.startsWith('  '));
+  assert.ok(!line.titlePrefix.startsWith('  '));
+});
+
+test('spinner_colors gives every frame its own colour', () => {
+  const { managed } = load(
+    'spinner_frames = ["◐", "◓", "◑", "◒"]\nspinner_colors = ["#111111", "#222222", "#333333", "#444444"]\n',
+  );
+  const block = managed.sidebarBlock('dark');
+  assert.ok(
+    block.includes(
+      'rules = [{ contains = "◐", fg = "#111111" }, { contains = "◓", fg = "#222222" }, { contains = "◑", fg = "#333333" }, { contains = "◒", fg = "#444444" }]',
+    ),
+  );
+});
+
+test('spinner_colors that do not fit the frames are ignored', () => {
+  const frames = 'spinner_frames = ["◐", "◓"]\n';
+  assert.equal(load(`${frames}spinner_colors = ["#111111"]\n`).config.spinnerColors, null);
+  assert.equal(load(`${frames}spinner_colors = ["#111111", "red"]\n`).config.spinnerColors, null);
+  assert.equal(
+    load('spinner_frames = ["◐", "◐"]\nspinner_colors = ["#111111", "#222222"]\n').config.spinnerColors,
+    null,
+  );
+  assert.deepEqual(load(`${frames}spinner_colors = ["#111111", "#222222"]\n`).config.spinnerColors, [
+    '#111111',
+    '#222222',
+  ]);
+});
+
+test('gradient alone has no spinner cell even with spinner colours', () => {
+  const { state, managed } = load('working_animation = "gradient"\nspinner_color = "#7aa2f7"\n');
+  assert.equal(state.composeLine(entry, 'working', '', '', 0).spinner, '');
+  assert.ok(!managed.sidebarBlock('dark').includes('$spinner'));
+});

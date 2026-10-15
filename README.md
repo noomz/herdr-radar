@@ -249,6 +249,10 @@ the config file and restarts the daemon.
 | `row_label` | `title` | what names an agent row: `title`, `tab` (the tab's name) or `both`; replaces `show_tab` |
 | `row_format` | unset | a template for the row text, instead of `row_label`: `"[{pane} · ]{title}"` |
 | `spinner_frames` | braille | the spinner in front of a working title: `["◐", "◓", "◑", "◒"]`, or a string read one frame per character; frames must be equally long |
+| `spinner_color` | vendor colour | the spinner's own colour; set, the spinner stands in a cell of its own (Herdr's separator then sits between it and the title) |
+| `spinner_colors` | unset | one colour per spinner frame, in frame order: as many as the frames, at most 16, frames all different |
+| `working_animation` | `spinner` | what moves on a working row: `spinner`, `gradient` (a band of colour running along the title) or `both`; the gradient needs a Herdr with sidebar token gradients, and a change needs `configure` run again |
+| `gradient_colors` | vendor colour with a lighter crest | the gradient's colours, 2 to 16 `#rrggbb`: `["#7aa2f7", "#bb9af7", "#f7768e"]` |
 | `trim_group_prefix` | `true` | drop the workspace name from a title when the header above already shows it |
 | `worktree_mark` | `U+F418` | the mark on a worktree header, needs a Nerd Font; empty for none |
 | `follow_appearance` | `true` | switch Herdr's theme with the desktop's light/dark |

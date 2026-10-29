@@ -38,6 +38,7 @@ it depicts. Marks identify third-party products and do not imply affiliation or 
 | kimchi | CAST AI Kimchi (proprietary) |
 | muse | Meta Platforms / Muse Code (proprietary) |
 | crush | Charmbracelet, Inc. / Crush — the heart drawn in Crush's own source, `internal/oauth/callback/heartbit.svg` |
+| pig | Michael Kinsy / PiG (MIT) — the pixel pig on PiG's project banner, `docs/assets/pig-project-banner.png`, traced to its silhouette |
 
 Marks for `cursor`, `opencode`, `hermes`, `copilot`, `deepseek`, `gemini`,
 `gpt`, `qwen`, `agy`, `kiro`, `glm`, and `muse` were taken from [lobehub/lobe-icons](https://github.com/lobehub/lobe-icons)
@@ -49,7 +50,7 @@ See each project's repository for license details and modifications.
 ## JetBrains Mono
 
 `dist/JetBrainsMonoHerdr-Regular.ttf` is JetBrains Mono v2.304 (© 2020 The JetBrains
-Mono Project Authors, SIL Open Font License 1.1) with this project's 33 icon glyphs
+Mono Project Authors, SIL Open Font License 1.1) with this project's 34 icon glyphs
 patched in and the family renamed to "JetBrains Mono Herdr", as the OFL requires for a
 modified build. The OFL text ships alongside it as `dist/OFL.txt`; the font's own
 copyright and license name records are kept intact.

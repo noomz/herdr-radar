@@ -16,6 +16,12 @@
 
 ---
 
+> [!NOTE]
+> **Maintenance mode.** Herdr's new app, herdr-app, now has much of this built in: grouping,
+> vendor logos and clearer working status. herdr-radar stays a plugin for the Herdr TUI: it keeps
+> up with new Herdr releases and bugs get fixed, and small fixes are welcome as PRs, but it won't
+> get new features. See [#73](https://github.com/hhdebb/herdr-radar/issues/73).
+
 ## What it is
 
 A [Herdr](https://herdr.dev) plugin that turns the sidebar's Agents list into something you
@@ -95,6 +101,21 @@ herdr plugin action invoke hhdebb.herdr-radar.state-start
 
 `plugin link` runs no build step; the daemon does the same setup on its first start, which is
 what the third line is for.
+
+### Update
+
+On Herdr 0.9.4 and later:
+
+```sh
+herdr plugin update hhdebb.herdr-radar
+```
+
+The daemon that is already running keeps the version it started with until Herdr restarts.
+To switch to the new one now, restart just the daemon; your panes are not touched:
+
+```sh
+herdr plugin action invoke hhdebb.herdr-radar.state-restart
+```
 
 ### Or hand it to an agent
 
@@ -245,6 +266,8 @@ the config file and restarts the daemon.
 | `group_indent` | `2` | spaces per tree level; `0` keeps headers and gaps but draws no tree lines; use `prefix+a` for the flat list |
 | `group_gap` | `true` | a blank row between groups |
 | `split_corner` | `false` | hang the other panes of a split screen off the first with a `├─` corner |
+| `multi_machine` | `false` | put the machine's name after each workspace header, `web · Machine-One`, for sessions on saved SSH machines; set it on each machine, since each one names its own |
+| `machine_label` | `""` | the name `multi_machine` shows; empty uses the hostname |
 | `reorder_workspaces` | `false` | make Herdr's workspace indices follow Radar's activity order |
 | `row_label` | `title` | what names an agent row: `title`, `tab` (the tab's name) or `both`; replaces `show_tab` |
 | `row_format` | unset | a template for the row text, instead of `row_label`: `"[{pane} · ]{title}"` |
@@ -293,7 +316,7 @@ switch_workspace = "prefix+shift+1..9"
 
 The first two are live state; the rest live in
 `$(herdr plugin config-dir hhdebb.herdr-radar)/config.toml` and can be edited by hand —
-then `state-stop` and `state-start`. The file appears the first time the popup saves; before
+then `state-restart`. The file appears the first time the popup saves; before
 that, create it with the keys above (booleans unquoted: `group_gap = false`).
 
 Both this file and Herdr's `config.toml` can be symlinks into a dotfiles repository: the
@@ -354,7 +377,7 @@ versions refused the whole install instead, with the reason only in the plugin l
 <summary><b>Changed a setting, nothing happened</b></summary>
 
 The daemon reads its config at start. `s` in the settings popup restarts it; after a hand edit,
-`state-stop` then `state-start`. Editing the three managed blocks in `config.toml` directly
+`state-restart`. Editing the three managed blocks in `config.toml` directly
 does not stick — the next `configure` writes them back.
 </details>
 

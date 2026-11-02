@@ -16,6 +16,13 @@
 
 ---
 
+> [!NOTE]
+> **メンテナンスモード。** Herdr の新しいアプリ herdr-app には、このプラグインの機能の多く
+> （グループ化、ベンダーロゴ、よりわかりやすい作業状態）がすでに組み込まれています。
+> herdr-radar は Herdr TUI のプラグインとして残り、Herdr の新しいリリースへの追従とバグ修正は
+> 続けます。小さな修正の PR は歓迎しますが、新機能は追加しません。詳しくは
+> [#73](https://github.com/hhdebb/herdr-radar/issues/73) を参照してください。
+
 ## これは何か
 
 [Herdr](https://herdr.dev) のプラグインです。サイドバーの Agents 一覧を、読めるパネルに変えます。
@@ -94,6 +101,21 @@ herdr plugin action invoke hhdebb.herdr-radar.state-start
 
 `plugin link` はビルド手順を実行しません。同じセットアップはデーモンの初回起動が行うので、
 3 行目が必要です。
+
+### 更新
+
+Herdr 0.9.4 以降：
+
+```sh
+herdr plugin update hhdebb.herdr-radar
+```
+
+すでに動いているデーモンは、Herdr を再起動するまで起動時のバージョンのまま動き続けます。
+すぐ新しい版に切り替えるには、デーモンだけを再起動します。ペインには影響しません：
+
+```sh
+herdr plugin action invoke hhdebb.herdr-radar.state-restart
+```
 
 ### エージェントに任せる
 
@@ -234,6 +256,8 @@ exec claude "$@"
 | `group_indent` | `2` | ツリーの階層ごとの空白数。`0` でも見出しと空行は残り、ツリー線は描かない。フラット表示は `prefix+a` |
 | `group_gap` | `true` | グループ間の空行 |
 | `split_corner` | `false` | 分割画面の残りのペインを `├─` で最初のペインの下にぶら下げる |
+| `multi_machine` | `false` | 各ワークスペース見出しの後ろにマシン名を付ける（例 `web · Machine-One`）。保存済み SSH マシン上のセッションを見分けるためのもの。見出しは各マシンが自分で書くので、マシンごとに設定する |
+| `machine_label` | `""` | `multi_machine` が表示する名前。空ならホスト名 |
 | `row_label` | `title` | 行の名前：`title` セッションのタイトル、`tab` タブ名、`both` 両方（旧 `show_tab = true`） |
 | `trim_group_prefix` | `true` | 見出しと同じ名前でタイトルが始まるとき、その部分を落とす |
 | `worktree_mark` | `U+F418` | worktree 見出しのマーク（Nerd Font が必要）。空で非表示 |
@@ -242,7 +266,7 @@ exec claude "$@"
 | `colors.active_row_bg_dark` | `#414868` | ダークテーマの選択行の背景 |
 
 最初の 2 つはライブの状態です。残りは `$(herdr plugin config-dir hhdebb.herdr-radar)/config.toml`
-にあり、手で編集してもかまいません。編集後は `state-stop`、続けて `state-start`。このファイルは
+にあり、手で編集してもかまいません。編集後は `state-restart` を実行します。このファイルは
 ポップアップが最初に保存したときに作られます。それより前に手で編集するなら、上の表のキーで自分で
 作ってください（真偽値は引用符なし：`group_gap = false`）。
 
@@ -288,7 +312,7 @@ Ghostty では割り当てが解決したかを答えられるのは `ghostty +s
 <summary><b>設定を変えたのに反映されない</b></summary>
 
 デーモンは起動時に設定を読みます。設定ポップアップの `s` は再起動します。手で編集したあとは
-`state-stop` の後に `state-start`。`config.toml` の 3 つの管理ブロックを直接編集しても、次の
+`state-restart` を実行します。`config.toml` の 3 つの管理ブロックを直接編集しても、次の
 `configure` で書き戻されます。
 </details>
 

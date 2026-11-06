@@ -690,6 +690,56 @@ const cases = [
     true,
     'test/machine-label.test.js',
   ],
+  [
+    'lib/frame.js',
+    'const familyOf = (ws) => parentOf.get(ws) ?? orphanFamily.get(ws) ?? ws;',
+    'const familyOf = (ws) => parentOf.get(ws) ?? ws;',
+    'groups: orphan worktrees of one repo rank alone and a busy project splits them',
+    true,
+    'test/orphan-family.test.js',
+  ],
+  [
+    'lib/state.js',
+    '      repoIds.set(ws.workspace_id, repoId(key));\n',
+    '      repoIds.set(ws.workspace_id, repoId(ws.worktree.repo_name));\n',
+    'groups: two unrelated repos that share a name merge into one family',
+    true,
+    'test/orphan-family.test.js',
+  ],
+  [
+    'lib/state.js',
+    "  return `repo:${crypto.createHash('sha1').update(key).digest('hex').slice(0, 10)}`;\n",
+    '  return `repo:${key}`;\n',
+    'groups: a repo path in $ws_key runs past the 80 characters Herdr keeps',
+    true,
+    'test/orphan-family.test.js',
+  ],
+  [
+    'lib/state.js',
+    'group_parent: orphan && !joined && name !== null',
+    'group_parent: orphan && name !== null',
+    'groups: every orphan of one repo repeats the repo row',
+    true,
+    'test/orphan-family.test.js',
+  ],
+
+  // lib/font.js — a terminal config that refuses the write (#78).
+  [
+    'lib/font.js',
+    '    return err.code ?? err.message;\n',
+    '    throw err;\n',
+    'font: a read-only terminal config aborts the install',
+    true,
+    'test/readonly-terminal-config.test.js',
+  ],
+  [
+    'lib/font.js',
+    '            ...terminal.lines.map((line) => `  ${line}`),\n',
+    '',
+    'font: the note about a read-only config leaves out the lines to add',
+    true,
+    'test/readonly-terminal-config.test.js',
+  ],
 
   // bin/agent-state.js — `state-restart` starts only once the old daemon has
   // gone (#65).
